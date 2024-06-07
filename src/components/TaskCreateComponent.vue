@@ -59,18 +59,18 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type task from '../model/task';
+import type Task from '../model/task';
 
 const menu = ref<boolean>(false);
 const valid = ref<boolean>(false);
 
-const newTask: task = {
+const newTask: Task = {
     id: 0,
     name: '',
     dueDate: new Date(),
     done: false
 }
-const newRefTask = ref<task>(newTask);
+const newRefTask = ref<Task>(newTask);
 
 const rules = {
     required: (value: any) => !!value || 'Required.'

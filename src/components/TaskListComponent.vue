@@ -1,18 +1,25 @@
 <template>
     <v-card>
         <v-card-title>
-            <div>
-                <RouterLink :to="'/task/' + task.id">{{ task!.name }}</RouterLink>
-            </div>
+            {{ task!.id }} - {{ task!.name }}
         </v-card-title>
+        <v-card-subtitle>
+            {{ task!.dueDate }}
+        </v-card-subtitle>
+        <v-card-actions>
+            <v-btn @click="$emit('delete')"><v-icon icon="$delete"></v-icon></v-btn>
+            <v-btn @click="$emit('edit', task)"><v-icon icon="$edit"></v-icon></v-btn>
+        </v-card-actions>
     </v-card>
 </template>
 
 <script async setup lang="ts">
-import type task from '../model/task';
+import type Task from '../model/task';
+
+
 
 const props = defineProps<{ 
-  task: task
+  task: Task
 }>()
 
 </script>
