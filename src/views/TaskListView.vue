@@ -1,5 +1,6 @@
 <template>
     <div>
+        <TaskCreateComponent></TaskCreateComponent>
         <Suspense>
             <template #default>
                 <TaskListComponent v-for="task in tasks" :task="task"></TaskListComponent>
@@ -15,6 +16,7 @@
 import { onMounted, ref } from 'vue';
 import type task from '../model/task';
 import TaskListComponent from '../components/TaskListComponent.vue';
+import TaskCreateComponent from '../components/TaskCreateComponent.vue';
 
 const tasks = ref<task[] | null>(null);
 

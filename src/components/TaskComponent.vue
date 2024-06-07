@@ -8,6 +8,11 @@
                 </template>
             </v-text-field>
         </v-card-title>
+        <v-card-subtitle>
+            <span v-if="thistask!.dueDate < new Date()">WAS DUE</span>
+            <span v-else>is due</span>
+            {{ thistask!.dueDate.getFullYear() }} - {{ thistask!.dueDate.getMonth() }} - {{ thistask!.dueDate.getDate() }}
+        </v-card-subtitle>
     </v-card>
 </template>
 
@@ -23,7 +28,9 @@ const thistask = ref<task>();
 
 async function fetchTask() {
     const response = await fetch('http://localhost:8080/task/' + props.id);
-    thistask.value = await response.json() as task;    
+    const data = await response.json();
+    data.dueDate = new Date(data.dueDate);
+    thistask.value = await data as task;
 }
 
 async function setDone() {
