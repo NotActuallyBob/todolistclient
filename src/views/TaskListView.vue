@@ -7,29 +7,16 @@
                     <v-dialog 
                         max-width="500"
                         v-model="editActive">
-                        <v-card title="Edit">
-                            <v-text-field v-model="taskEdited!.name">
-                            </v-text-field>
-
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-
-                                <v-btn
-                                text="Close Dialog"
-                                @click="editActive = false"
-                                ></v-btn>
-                                <v-btn
-                                text="Save"
-                                @click="saveEditedTask"
-                                ></v-btn>
-                            </v-card-actions>
-                        </v-card>
+                        <TaskForm
+                            :form-task="taskEdited!"
+                            :is-edit="true"
+                            @close-dialog="closeAndReload"></TaskForm>
                     </v-dialog>
                     <TaskListComponent 
-                        v-for="task in tasks" 
+                        v-for="task in store.tasks" 
+                        :key="task.id"
                         :task="task" 
-                        @edit="editTask(task)"
-                        @delete="deleteTask(task.id)">
+                        @edit="editTask(task)">
                     </TaskListComponent>
                 </div>
             </template>
@@ -45,18 +32,16 @@ import { onMounted, ref } from 'vue';
 import type Task from '../model/task';
 import TaskListComponent from '../components/TaskListComponent.vue';
 import TaskCreateComponent from '../components/TaskCreateComponent.vue';
+import TaskForm from '../components/TaskForm.vue';
+import { useTaskStore } from '../store/useTaskStore';
 
-const tasks = ref<Task[]>([]);
+const store = useTaskStore();
+
 const editActive = ref<boolean>(false);
 const taskEdited = ref<Task | null>(null);
 
-async function fetchTask() {
-    const response = await fetch('http://localhost:8080/task');
-    tasks.value = await response.json();
-}
-
 onMounted(async () => {
-    await fetchTask();
+    await store.fetchTask();
 });
 
 function editTask(task: Task) {
@@ -64,15 +49,8 @@ function editTask(task: Task) {
     editActive.value = true;
 }
 
-async function saveEditedTask() {
-    const requestOptions = {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(taskEdited.value!)
-    };
-
-    const url :string = 'http://localhost:8080/task/' + taskEdited.value!.id;
-    await fetch(url, requestOptions);
+function closeAndReload() {
+    console.log('closing');
     editActive.value = false;
 }
 
@@ -90,4 +68,4 @@ async function deleteTask(id: number) {
 
 <style scoped>
 
-</style>
+</style>../store/useTaskStore
