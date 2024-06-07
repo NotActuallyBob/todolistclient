@@ -1,9 +1,9 @@
 <template>
-    <v-form ref="form" v-model="valid" @submit.prevent="createForm">
+    <v-form ref="form" v-model="valid" @submit.prevent="edit">
         <v-card title="New Task">
             <v-card-text>
                 <v-text-field
-                    v-model="formTask.name"
+                    v-model="task!.name"
                     label="Task Name"
                     :rules="[rules.required]"
                     required
@@ -18,7 +18,7 @@
                 >
                     <template v-slot:activator="{ isActive, props }">
                     <v-text-field
-                        v-model="formTask.dueDate"
+                        v-model="task!.dueDate"
                         label="Due Date"
                         prepend-icon="mdi-calendar"
                         readonly
@@ -26,19 +26,13 @@
                         :v-on="isActive"
                     ></v-text-field>
                     </template>
-                    <v-date-picker v-model="formTask.dueDate" @input="menu = false"></v-date-picker>
+                    <v-date-picker v-model="task!.dueDate" @input="menu = false"></v-date-picker>
                 </v-menu>
             </v-card-text>
 
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn
-                    text="Close Dialog"
-                    @click="$emit('close-dialog')"
-                >
-                    Close
-                </v-btn>
-                <v-btn :disabled="!valid" color="success" @click="createForm">
+                <v-btn :disabled="!valid" color="success" @click="edit">
                     Save
                 </v-btn>
             </v-card-actions>
@@ -48,45 +42,25 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { addHours } from 'date-fns';
-import type Task from '../model/task';
 import { useTaskStore } from '../store/useTaskStore';
+import { useRoute } from 'vue-router';
+import Task from '../model/task';
 
+const route = useRoute();
 const store = useTaskStore();
-
-const emit = defineEmits<{ (e: 'close-dialog'): void }>();
-
-const props = defineProps<{ 
-  formTask: Task,
-  isEdit: boolean
-}>()
-
-
-
-
+const task = ref<Task | undefined>(store.fetchTask(Number(route.params.taskId)));
 const menu = ref<boolean>(false);
 const valid = ref<boolean>(false);
 const rules = {
     required: (value: any) => !!value || 'Required.'
 };
 
-
-async function createForm() {
-    props.formTask.dueDate = addHours(props.formTask.dueDate, 3);
-    
-    if (valid.value) {
-        
-        if(props.isEdit) {
-            await store.editTask(props.formTask.id, props.formTask);
-        } else {
-            await store.createTask(props.formTask);
-        }
-        emit('close-dialog');
-    }
+async function edit() {
+    await store.editTask(task.value!.id, task.value!);
 }
 
 </script>
 
 <style scoped>
 
-</style>
+</style>../store/useTaskStore

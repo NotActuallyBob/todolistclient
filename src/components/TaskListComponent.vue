@@ -8,7 +8,7 @@
         </v-card-subtitle>
         <v-card-actions>
             <v-btn @click="store.deleteTask(task.id)"><v-icon icon="$delete"></v-icon></v-btn>
-            <v-btn @click="$emit('edit', task)"><v-icon icon="$edit"></v-icon></v-btn>
+            <v-btn @click="$router.push('/task/' + task.id)"><v-icon icon="$edit"></v-icon></v-btn>
         </v-card-actions>
     </v-card>
 </template>

@@ -9,7 +9,15 @@ export const useTaskStore = defineStore('task', () => {
     
     const doubleCount = computed(() => 2 * 2)
 
-    async function fetchTask() {
+    function fetchTask(id: number): Task | undefined {
+      const index = tasks.value.findIndex(x => x.id === id);
+      if(index != -1) {
+        return tasks.value[index];
+      }
+      return undefined;
+    }
+
+    async function fetchTasks() {
       const response = await fetch(url);
       const data = await response.json();
       
@@ -57,5 +65,5 @@ export const useTaskStore = defineStore('task', () => {
       }
     }
   
-    return { tasks, doubleCount, fetchTask, deleteTask, editTask, createTask }
+    return { tasks, doubleCount, fetchTasks, deleteTask, editTask, createTask, fetchTask }
 })
