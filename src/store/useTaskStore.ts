@@ -9,11 +9,24 @@ export const useTaskStore = defineStore('task', () => {
     
     const doubleCount = computed(() => 2 * 2)
 
-    function fetchTask(id: number): Task | undefined {
+    async function fetchTask(id: number): Promise<Task | undefined> {
       const index = tasks.value.findIndex(x => x.id === id);
       if(index != -1) {
         return tasks.value[index];
       }
+
+      const response = await fetch(url + '/' + id);
+      if(response.ok) {
+        const data = await response.json();
+      
+        const task: Task = {
+          ...data,
+          dueDate: new Date(data.dueDate)
+        }
+
+        return task;
+      }
+      
       return undefined;
     }
 

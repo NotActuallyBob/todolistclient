@@ -1,5 +1,5 @@
 <template>
-    <div v-if="task == undefined"></div>
+    <div v-if="task == undefined || loading"></div>
     <div v-else>
         <v-form ref="form" v-model="valid" @submit.prevent="edit">
             <v-card title="New Task">
@@ -44,14 +44,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useTaskStore } from '../store/useTaskStore';
 import { useRoute } from 'vue-router';
 import Task from '../model/task';
 
 const route = useRoute();
 const store = useTaskStore();
-const task = ref<Task | undefined>(store.fetchTask(Number(route.params.taskId)));
+const task = ref<Task | undefined>();
+const loading = ref<boolean>(true);
 const menu = ref<boolean>(false);
 const valid = ref<boolean>(false);
 const rules = {
@@ -61,6 +62,14 @@ const rules = {
 async function edit() {
     await store.editTask(task.value!.id, task.value!);
 }
+
+onMounted(async () => {
+    loading.value = true;
+    task.value = await store.fetchTask(Number(route.params.taskId))
+    loading.value = false;
+});
+
+
 
 </script>
 
