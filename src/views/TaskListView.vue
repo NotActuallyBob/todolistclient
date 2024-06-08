@@ -2,13 +2,35 @@
     <div>
         <TaskCreateComponent></TaskCreateComponent>
         <div v-if="loading">Loading tasks...</div>
-        <div v-else>
-            <TaskComponent 
-                v-for="task in store.tasks" 
-                :key="task.id"
-                :task="task">
-            </TaskComponent>
-        </div>
+        <v-card v-else>
+            <v-tabs
+            v-model="tab"
+            bg-color="primary"
+            >
+            <v-tab value="one">To Do</v-tab>
+            <v-tab value="two">Done</v-tab>
+            </v-tabs>
+
+            <v-card-text>
+            <v-tabs-window v-model="tab">
+                <v-tabs-window-item value="one">
+                    <TaskComponent 
+                        v-for="task in store.todoTasks" 
+                        :key="task.id"
+                        :task="task">
+                    </TaskComponent>
+                </v-tabs-window-item>
+
+                <v-tabs-window-item value="two">
+                    <TaskComponent 
+                        v-for="task in store.doneTasks" 
+                        :key="task.id"
+                        :task="task">
+                    </TaskComponent>
+                </v-tabs-window-item>
+            </v-tabs-window>
+            </v-card-text>
+        </v-card>
     </div>
 </template>
 
@@ -22,6 +44,7 @@ import { useRoute } from 'vue-router';
 const store = useTaskStore();
 const route = useRoute();
 const loading = ref(true);
+const tab = ref('one');
 
 onMounted(async () => {
     loading.value = true;

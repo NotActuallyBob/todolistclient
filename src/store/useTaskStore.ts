@@ -8,6 +8,8 @@ export const useTaskStore = defineStore('task', () => {
     const tasks = ref<Task[]>([])
     
     const doubleCount = computed(() => 2 * 2)
+    const todoTasks = computed(() => tasks.value.filter(x => x.done === false))
+    const doneTasks = computed(() => tasks.value.filter(x => x.done === true))
 
     async function fetchTask(id: number): Promise<Task | undefined> {
       const index = tasks.value.findIndex(x => x.id === id);
@@ -76,5 +78,5 @@ export const useTaskStore = defineStore('task', () => {
       });
     }
   
-    return { tasks, doubleCount, fetchTasks, deleteTask, editTask, createTask, fetchTask }
+    return { tasks, doubleCount, fetchTasks, deleteTask, editTask, createTask, fetchTask, todoTasks, doneTasks }
 })
