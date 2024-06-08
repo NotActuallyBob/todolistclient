@@ -61,21 +61,19 @@ export const useTaskStore = defineStore('task', () => {
       const index = tasks.value.findIndex(x => x.id === id);
       if(index != -1) {
         tasks.value.splice(index, 1);
-        const delteUrl :string = url + '/' + id;
-        await fetch(delteUrl, {method: 'DELETE'});
       }
+
+      const delteUrl :string = url + '/' + id;
+      await fetch(delteUrl, {method: 'DELETE'});
     }
 
     async function editTask(id: number, task: Task) {
-      const index = tasks.value.findIndex(x => x.id === id);
-      if(index != -1) {
-        const editUrl: string = url + '/' + id;
-        await fetch(editUrl, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(task)
-        });
-      }
+      const editUrl: string = url + '/' + id;
+      await fetch(editUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(task)
+      });
     }
   
     return { tasks, doubleCount, fetchTasks, deleteTask, editTask, createTask, fetchTask }

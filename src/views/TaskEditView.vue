@@ -75,4 +75,4 @@ onMounted(async () => {
 
 <style scoped>
 
-</style>../store/useTaskStore
+</style>
