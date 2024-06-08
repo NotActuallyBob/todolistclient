@@ -3,17 +3,17 @@
         <TaskCreateComponent></TaskCreateComponent>
         <div v-if="loading">Loading tasks...</div>
         <div v-else>
-            <TaskListComponent 
+            <TaskComponent 
                 v-for="task in store.tasks" 
                 :key="task.id"
                 :task="task">
-            </TaskListComponent>
+            </TaskComponent>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import TaskListComponent from '../components/TaskListComponent.vue';
+import TaskComponent from '../components/TaskComponent.vue';
 import TaskCreateComponent from '../components/TaskCreateComponent.vue';
 import { useTaskStore } from '../store/useTaskStore';
 import { watch, onMounted, ref } from 'vue';

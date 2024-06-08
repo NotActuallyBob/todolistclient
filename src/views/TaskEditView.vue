@@ -2,7 +2,7 @@
     <div v-if="task == undefined || loading"></div>
     <div v-else>
         <v-form ref="form" v-model="valid" @submit.prevent="edit">
-            <v-card title="New Task">
+            <v-card title="Task Edit">
                 <v-card-text>
                     <v-text-field
                         v-model="task!.name"
