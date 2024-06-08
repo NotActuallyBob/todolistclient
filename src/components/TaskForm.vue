@@ -3,7 +3,7 @@
         <v-card title="New Task">
             <v-card-text>
                 <v-text-field
-                    v-model="formTask.name"
+                    v-model="newRefTask.name"
                     label="Task Name"
                     :rules="[rules.required]"
                     required
@@ -18,7 +18,7 @@
                 >
                     <template v-slot:activator="{ isActive, props }">
                     <v-text-field
-                        v-model="formTask.dueDate"
+                        v-model="newRefTask.dueDate"
                         label="Due Date"
                         prepend-icon="mdi-calendar"
                         readonly
@@ -26,7 +26,7 @@
                         :v-on="isActive"
                     ></v-text-field>
                     </template>
-                    <v-date-picker v-model="formTask.dueDate" @input="menu = false"></v-date-picker>
+                    <v-date-picker v-model="newRefTask.dueDate" @input="menu = false"></v-date-picker>
                 </v-menu>
             </v-card-text>
 
@@ -54,15 +54,14 @@ import { useTaskStore } from '../store/useTaskStore';
 
 const store = useTaskStore();
 
-const emit = defineEmits<{ (e: 'close-dialog'): void }>();
 
-const props = defineProps<{ 
-  formTask: Task,
-  isEdit: boolean
-}>()
-
-
-
+const newTask: Task = {
+    id: 0,
+    name: '',
+    dueDate: new Date(),
+    done: false
+}
+const newRefTask = ref<Task>(newTask);
 
 const menu = ref<boolean>(false);
 const valid = ref<boolean>(false);
@@ -72,16 +71,13 @@ const rules = {
 
 
 async function createForm() {
-    props.formTask.dueDate = addHours(props.formTask.dueDate, 3);
+    newRefTask.value.dueDate = addHours(newRefTask.value.dueDate, 3);
     
     if (valid.value) {
-        
-        if(props.isEdit) {
-            await store.editTask(props.formTask.id, props.formTask);
-        } else {
-            await store.createTask(props.formTask);
-        }
-        emit('close-dialog');
+        await store.createTask(newRefTask.value);
+        newRefTask.value.name = '';
+        newRefTask.value.dueDate = new Date();
+        newRefTask.value.done = false;
     }
 }
 

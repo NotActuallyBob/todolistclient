@@ -2,9 +2,6 @@
 </script>
 
 <template>
-  <nav>
-    <RouterLink to="/task">Tasks</RouterLink>
-  </nav>
   <main>
     <RouterView />
   </main>

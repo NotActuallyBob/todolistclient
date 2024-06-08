@@ -1,6 +1,5 @@
 <template>
     <div>
-        <TaskCreateComponent></TaskCreateComponent>
         <div v-if="loading">Loading tasks...</div>
         <v-card v-else>
             <v-tabs
@@ -9,6 +8,7 @@
             >
             <v-tab value="one">To Do</v-tab>
             <v-tab value="two">Done</v-tab>
+            <v-tab value="three">New Task</v-tab>
             </v-tabs>
 
             <v-card-text>
@@ -28,6 +28,9 @@
                         :task="task">
                     </TaskComponent>
                 </v-tabs-window-item>
+                <v-tabs-window-item value="three">
+                    <TaskForm></TaskForm>
+                </v-tabs-window-item>
             </v-tabs-window>
             </v-card-text>
         </v-card>
@@ -36,7 +39,7 @@
 
 <script setup lang="ts">
 import TaskComponent from '../components/TaskComponent.vue';
-import TaskCreateComponent from '../components/TaskCreateComponent.vue';
+import TaskForm from '../components/TaskForm.vue';
 import { useTaskStore } from '../store/useTaskStore';
 import { watch, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
