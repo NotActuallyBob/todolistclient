@@ -32,14 +32,28 @@ export const useTaskStore = defineStore('task', () => {
       return undefined;
     }
 
+    function sortTasks() {
+      tasks.value.sort(function(x, y) {
+        if (x.dueDate < y.dueDate) {
+          return -1;
+        }
+        if (x.dueDate > y.dueDate) {
+          return 1;
+        }
+        return 0;
+      });
+    }
+
     async function fetchTasks() {
       const response = await fetch(url);
       const data = await response.json();
       
       tasks.value = data.map((task: any) => ({
-          ...task,
-          dueDate: new Date(task.dueDate)
+        ...task,
+        dueDate: new Date(task.dueDate)
       }));
+
+      sortTasks();
     }
 
     async function createTask(task: Task) {
@@ -56,6 +70,7 @@ export const useTaskStore = defineStore('task', () => {
           ...data,
           dueDate: new Date(data.dueDate)
         });
+        sortTasks();
       }
     }
 
