@@ -2,9 +2,11 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue';
 import Task from '../model/task';
 
-export const useTaskStore = defineStore('task', () => {
-    const url = import.meta.env.VITE_API_URL + 'task';
+export const useTaskStore = defineStore('tasks', () => {
+    const taskUrl = import.meta.env.VITE_API_URL + 'tasks';
+    const projectUrl = import.meta.env.VITE_API_URL + 'projects';
 
+    const selectedProjectId = ref<number>(-1);
     const tasks = ref<Task[]>([])
     
     const doubleCount = computed(() => 2 * 2)
@@ -17,7 +19,7 @@ export const useTaskStore = defineStore('task', () => {
         return tasks.value[index];
       }
 
-      const response = await fetch(url + '/' + id);
+      const response = await fetch(taskUrl + '/' + id);
       if(response.ok) {
         const data = await response.json();
       
@@ -45,19 +47,33 @@ export const useTaskStore = defineStore('task', () => {
     }
 
     async function fetchTasks() {
-      const response = await fetch(url);
-      const data = await response.json();
-      
-      tasks.value = data.map((task: any) => ({
-        ...task,
-        dueDate: new Date(task.dueDate)
-      }));
+      if(selectedProjectId.value === -1) {
+        console.log(taskUrl);
+        const response = await fetch(taskUrl);
+        const data = await response.json();
+        
+        tasks.value = data.map((task: any) => ({
+          ...task,
+          dueDate: new Date(task.dueDate)
+        }));
 
-      sortTasks();
+        sortTasks();
+      } else {
+        const response = await fetch(projectUrl + '/' + selectedProjectId.value + '/tasks');
+        console.log(projectUrl + '/' + selectedProjectId.value + '/tasks');
+        const data = await response.json();
+        
+        tasks.value = data.map((task: any) => ({
+          ...task,
+          dueDate: new Date(task.dueDate)
+        }));
+
+        sortTasks();
+      }
     }
 
     async function createTask(task: Task) {
-      const response = await fetch(url, {
+      const response = await fetch(taskUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(task)
@@ -80,12 +96,12 @@ export const useTaskStore = defineStore('task', () => {
         tasks.value.splice(index, 1);
       }
 
-      const delteUrl :string = url + '/' + id;
+      const delteUrl :string = taskUrl + '/' + id;
       await fetch(delteUrl, {method: 'DELETE'});
     }
 
     async function editTask(id: number, task: Task) {
-      const editUrl: string = url + '/' + id;
+      const editUrl: string = taskUrl + '/' + id;
       await fetch(editUrl, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -93,5 +109,5 @@ export const useTaskStore = defineStore('task', () => {
       });
     }
   
-    return { tasks, doubleCount, fetchTasks, deleteTask, editTask, createTask, fetchTask, todoTasks, doneTasks }
+    return { tasks, selectedProjectId, doubleCount, fetchTasks, deleteTask, editTask, createTask, fetchTask, todoTasks, doneTasks }
 })

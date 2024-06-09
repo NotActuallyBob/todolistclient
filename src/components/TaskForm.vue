@@ -28,6 +28,14 @@
                     </template>
                     <v-date-picker v-model="newRefTask.dueDate" @input="menu = false"></v-date-picker>
                 </v-menu>
+
+                <v-select
+                    label="Project"
+                    v-model="newRefTask.project.id"
+                    :items="projectStore.projects"
+                    item-title="name"
+                    item-value="id"
+                ></v-select>
             </v-card-text>
 
             <v-card-actions>
@@ -51,15 +59,21 @@ import { ref } from 'vue';
 import { addHours } from 'date-fns';
 import type Task from '../model/task';
 import { useTaskStore } from '../store/useTaskStore';
+import { useProjectStore } from '../store/useProjectStore';
 
-const store = useTaskStore();
+const taskStore = useTaskStore();
+const projectStore = useProjectStore();
 
 
 const newTask: Task = {
     id: 0,
     name: '',
     dueDate: new Date(),
-    done: false
+    done: false,
+    project: {
+        id: 0,
+        name: ''
+    }
 }
 const newRefTask = ref<Task>(newTask);
 
@@ -74,10 +88,12 @@ async function createForm() {
     newRefTask.value.dueDate = addHours(newRefTask.value.dueDate, 3);
     
     if (valid.value) {
-        await store.createTask(newRefTask.value);
+        await taskStore.createTask(newRefTask.value);
         newRefTask.value.name = '';
         newRefTask.value.dueDate = new Date();
         newRefTask.value.done = false;
+        newRefTask.value.project.id = 0;
+        newRefTask.value.project.name = '';
     }
 }
 

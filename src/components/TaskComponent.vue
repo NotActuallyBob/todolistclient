@@ -5,6 +5,8 @@
         </v-card-title>
         <v-card-subtitle>
             {{ task!.dueDate.getDate() }}.{{ task!.dueDate.getMonth() }}.{{ task!.dueDate.getFullYear() }}
+            <br>
+            {{  task!.project.name }}
         </v-card-subtitle>
         <v-card-actions>
             <v-btn @click="store.deleteTask(task.id)"><v-icon icon="mdi-delete"></v-icon></v-btn>
