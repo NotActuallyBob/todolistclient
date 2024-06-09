@@ -30,10 +30,16 @@
                         </template>
                         <v-date-picker v-model="task!.dueDate" @input="menu = false"></v-date-picker>
                     </v-menu>
+
+                    <v-textarea
+                        v-model="task!.notes"
+                        label="Notes"
+                    ></v-textarea>
                 </v-card-text>
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
+                    <v-btn @click="$router.push('/task/')">Back</v-btn>
                     <v-btn :disabled="!valid" color="success" @click="edit">
                         Save
                     </v-btn>

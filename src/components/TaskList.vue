@@ -1,5 +1,6 @@
 <template>
     <v-select
+        label="Project"
         v-model="taskStore.selectedProjectId"
         :items="projects"
         item-title="name"

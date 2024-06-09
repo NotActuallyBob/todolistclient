@@ -1,10 +1,10 @@
 <template>
-    <v-form ref="form" v-model="valid" @submit.prevent="createForm">
+    <v-form v-model="valid" @submit.prevent="createForm">
         <v-card title="New Task">
             <v-card-text>
                 <v-text-field
                     v-model="newRefTask.name"
-                    label="Task Name"
+                    label="Name"
                     :rules="[rules.required]"
                     required
                 ></v-text-field>
@@ -36,16 +36,15 @@
                     item-title="name"
                     item-value="id"
                 ></v-select>
+
+                <v-textarea
+                    v-model="newRefTask.notes"
+                    label="Notes"
+                ></v-textarea>
             </v-card-text>
 
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn
-                    text="Close Dialog"
-                    @click="$emit('close-dialog')"
-                >
-                    Close
-                </v-btn>
                 <v-btn :disabled="!valid" color="success" @click="createForm">
                     Save
                 </v-btn>
@@ -68,6 +67,7 @@ const projectStore = useProjectStore();
 const newTask: Task = {
     id: 0,
     name: '',
+    notes: '',
     dueDate: new Date(),
     done: false,
     project: {
@@ -75,25 +75,22 @@ const newTask: Task = {
         name: ''
     }
 }
-const newRefTask = ref<Task>(newTask);
+const newRefTask = ref<Task>({ ...newTask });
 
 const menu = ref<boolean>(false);
 const valid = ref<boolean>(false);
+
 const rules = {
     required: (value: any) => !!value || 'Required.'
 };
 
 
-async function createForm() {
+async function createForm(this: any) {
     newRefTask.value.dueDate = addHours(newRefTask.value.dueDate, 3);
     
     if (valid.value) {
         await taskStore.createTask(newRefTask.value);
-        newRefTask.value.name = '';
-        newRefTask.value.dueDate = new Date();
-        newRefTask.value.done = false;
-        newRefTask.value.project.id = 0;
-        newRefTask.value.project.name = '';
+        newRefTask.value = { ...newTask };
     }
 }
 
