@@ -53,14 +53,12 @@ const projects = computed<Project[]>(() => {
 
 onMounted(async () => {
     loading.value = true;
-    console.log('lol');
     await taskStore.fetchTasks();
     loading.value = false;
 });
 
 watch(route, async () => {
     loading.value = true;
-    console.log('lol');
     await taskStore.fetchTasks();
     await projectStore.fetchProjects();
     loading.value = false;
