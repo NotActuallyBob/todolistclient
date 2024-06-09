@@ -11,7 +11,7 @@
         <v-card-actions>
             <v-btn @click="store.deleteTask(task.id)"><v-icon icon="mdi-delete"></v-icon></v-btn>
             <v-btn @click="$router.push('/task/' + task.id)"><v-icon icon="mdi-pencil"></v-icon></v-btn>
-            <v-btn @click="setTaskDone(task)"><v-icon icon="mdi-check-bold"></v-icon></v-btn>
+            <v-btn @click="setTaskDone"><v-icon icon="mdi-check-bold"></v-icon></v-btn>
         </v-card-actions>
     </v-card>
 </template>
@@ -22,9 +22,9 @@ import { useTaskStore } from '../store/useTaskStore';
 
 const store = useTaskStore();
 
-function setTaskDone(task: Task) {
-    task.done = true;
-    store.editTask(task.id, task);
+function setTaskDone() {
+    props.task.done = true;
+    store.editTask(props.task.id, props.task);
 }
 
 const props = defineProps<{ 

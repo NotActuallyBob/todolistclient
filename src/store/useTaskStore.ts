@@ -48,7 +48,6 @@ export const useTaskStore = defineStore('tasks', () => {
 
     async function fetchTasks() {
       if(selectedProjectId.value === -1) {
-        console.log(taskUrl);
         const response = await fetch(taskUrl);
         const data = await response.json();
         
@@ -60,7 +59,6 @@ export const useTaskStore = defineStore('tasks', () => {
         sortTasks();
       } else {
         const response = await fetch(projectUrl + '/' + selectedProjectId.value + '/tasks');
-        console.log(projectUrl + '/' + selectedProjectId.value + '/tasks');
         const data = await response.json();
         
         tasks.value = data.map((task: any) => ({
