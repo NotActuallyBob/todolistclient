@@ -80,11 +80,15 @@ export const useTaskStore = defineStore('tasks', () => {
       if(response.ok) {
         const data = await response.json();
         
-        tasks.value.push({
+        const newTask: Task = {
           ...data,
           dueDate: new Date(data.dueDate)
-        });
-        sortTasks();
+        }
+
+        if(newTask.project.id === selectedProjectId.value) {
+          tasks.value.push(newTask);
+          sortTasks();
+        }
       }
     }
 
