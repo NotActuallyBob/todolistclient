@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import Project from '../model/project';
 
 export const useProjectStore = defineStore('projects', () => {
-    const url = import.meta.env.VITE_API_URL + 'projects';
+    const url = '/api/projects';
 
     const projects = ref<Project[]>([])
 

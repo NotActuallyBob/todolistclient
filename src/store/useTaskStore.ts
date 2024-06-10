@@ -3,8 +3,8 @@ import { computed, ref } from 'vue';
 import Task from '../model/task';
 
 export const useTaskStore = defineStore('tasks', () => {
-    const taskUrl = import.meta.env.VITE_API_URL + 'tasks';
-    const projectUrl = import.meta.env.VITE_API_URL + 'projects';
+    const taskUrl = '/api/tasks';
+    const projectUrl = '/api/projects';
 
     const selectedProjectId = ref<number>(-1);
     const tasks = ref<Task[]>([])
